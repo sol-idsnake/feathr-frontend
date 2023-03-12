@@ -1,24 +1,50 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { useEffect, useState } from "react";
+import "./App.css";
+
+export type Post = {
+  name: string;
+  slug: string;
+  id: string;
+  content: string;
+};
 
 function App() {
+  const [posts, setPosts] = useState<Post[] | []>([]);
+
+  const fetchPosts = async () => {
+    try {
+      const rawPosts = await fetch(`${process.env.REACT_APP_SERVER_ENDPOINT}/api/posts/`);
+
+      const { posts } = await rawPosts.json();
+
+      setPosts(posts);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    if (posts.length === 0) {
+      fetchPosts();
+    }
+  });
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h2>Recent Posts</h2>
+
+      <ul>
+        {posts &&
+          posts.map((post) => {
+            return (
+              <li key={post.id}>
+                <h3>{post.name}</h3>
+                <p>{`${post.content.substring(0, 25)}...`}</p>
+                <a href={post.slug}>Read more &gt;</a>
+              </li>
+            );
+          })}
+      </ul>
     </div>
   );
 }
