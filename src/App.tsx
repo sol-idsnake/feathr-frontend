@@ -44,6 +44,7 @@ function App() {
               </li>
             );
           })}
+        {posts.length === 0 && <li key="empty">No posts found.</li>}
       </ul>
     </div>
   );
