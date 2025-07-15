@@ -1,13 +1,26 @@
-import { BrowserRouter, Route,Routes } from "react-router-dom";
+import type { JSX } from "react";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 
-import Home from "./pages/Home";
+import BasicAppShell from "./components/AppShell";
+import Characters from "./pages/Characters";
+import Planets from "./pages/Planets";
+import Starships from "./pages/Starships";
+import { AppRoutes } from "./routes";
 
-function App() {
+function App(): JSX.Element {
   return (
     <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Home />} />
-      </Routes>
+      <BasicAppShell>
+        <Routes>
+          <Route
+            element={<Navigate to={AppRoutes.Characters} replace />}
+            path="/"
+          />
+          <Route path={AppRoutes.Characters} element={<Characters />} />
+          <Route path={AppRoutes.Planets} element={<Planets />} />
+          <Route path={AppRoutes.Starships} element={<Starships />} />
+        </Routes>
+      </BasicAppShell>
     </BrowserRouter>
   );
 }
