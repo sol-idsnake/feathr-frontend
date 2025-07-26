@@ -2,9 +2,9 @@ import type { JSX } from "react";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 
 import BasicAppShell from "./components/AppShell";
-import Characters from "./pages/Characters";
-import Planets from "./pages/Planets";
-import Starships from "./pages/Starships";
+import Characters from "./pages/characters";
+import Planets from "./pages/planets";
+import Starships from "./pages/starships";
 import { AppRoutes } from "./routes";
 
 function App(): JSX.Element {
