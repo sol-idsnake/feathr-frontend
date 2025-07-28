@@ -2,14 +2,14 @@ import { useQueries, useQuery } from "@tanstack/react-query";
 import { useMemo } from "react";
 import { useParams } from "react-router-dom";
 
-import { Endpoint, fetchSingleData } from "../lib/api";
+import { Endpoints, fetchSingleData, getDataTypeRoute } from "../lib/api";
 import { buildRelatedQueries } from "../lib/helper";
 import type { Film, Person, Planet, Specie, Starship } from "../types";
 
 function useDetailData() {
   const { queryKey, id } = useParams();
 
-  const initQueryKey = queryKey ?? Endpoint.people;
+  const initQueryKey = queryKey ?? Endpoints.people;
 
   // Fetch person data
   const {
@@ -56,10 +56,15 @@ function useDetailData() {
     return {
       ...person,
       homeworld:
-        getResultsByKey<Planet>("homeworld")[0]?.name ?? person.homeworld,
-      species: getResultsByKey<Specie>("species").map((specie) => specie?.name),
-      films: getResultsByKey<Film>("films").map((film) => film?.title),
-      starships: getResultsByKey<Starship>("starships").map(
+        getResultsByKey<Planet>(getDataTypeRoute("homeworld"))[0]?.name ??
+        person.homeworld,
+      species: getResultsByKey<Specie>(getDataTypeRoute("species")).map(
+        (specie) => specie?.name
+      ),
+      films: getResultsByKey<Film>(getDataTypeRoute("films")).map(
+        (film) => film?.title
+      ),
+      starships: getResultsByKey<Starship>(getDataTypeRoute("starships")).map(
         (ship) => ship?.name
       ),
     };

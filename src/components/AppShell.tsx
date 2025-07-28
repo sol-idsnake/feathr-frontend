@@ -11,7 +11,7 @@ interface IAppShellProps {
   children: ReactNode;
 }
 
-const BasicAppShell = ({ children }: IAppShellProps): JSX.Element => {
+function BasicAppShell({ children }: IAppShellProps): JSX.Element {
   const [opened, { toggle, close }] = useDisclosure();
   const location = useLocation();
 
@@ -41,6 +41,6 @@ const BasicAppShell = ({ children }: IAppShellProps): JSX.Element => {
       <AppShell.Main>{children}</AppShell.Main>
     </AppShell>
   );
-};
+}
 
 export default BasicAppShell;

@@ -13,7 +13,7 @@ import {
 
 import type { Person } from "../types";
 
-export function EntityDetail({ person }: { person: Person }) {
+function EntityDetail({ person }: { person: Person }) {
   const {
     birth_year,
     eye_color,
@@ -33,29 +33,27 @@ export function EntityDetail({ person }: { person: Person }) {
     return <Skeleton />;
   }
 
-  const filmBadges = films.map((film) => {
+  const filmBadges = films.map((film, index) => {
     return (
-      <Badge key={film} variant="light" color="indigo">
+      <Badge key={`${film}-${index}`} variant="light" color="indigo">
         <Text>{film}</Text>
       </Badge>
     );
   });
 
-  const starShipBadges = starships.map((ship) => {
+  const starShipBadges = starships.map((ship, index) => {
     return (
-      <Badge variant="light" color="teal" key={ship}>
+      <Badge variant="light" color="teal" key={`${ship}-${index}`}>
         <Text>{ship}</Text>
       </Badge>
     );
   });
 
-  const speciesBadges = species.map((specie) => {
+  const speciesBadges = species.map((specie, index) => {
     return (
-      <Group mt="xs" key={specie}>
-        <Badge variant="light" color="blue">
-          {specie}
-        </Badge>
-      </Group>
+      <Badge variant="light" color="blue" key={`${specie}-${index}`}>
+        {specie}
+      </Badge>
     );
   });
 
@@ -97,7 +95,10 @@ export function EntityDetail({ person }: { person: Person }) {
             <Text mt="sm">
               <strong>Species:</strong>
             </Text>
-            {species.length ? speciesBadges : <Text c="dimmed">Unknown</Text>}
+
+            <Group mt="xs">
+              {species.length ? speciesBadges : <Text c="dimmed">Unknown</Text>}
+            </Group>
           </Grid.Col>
         </Grid>
 

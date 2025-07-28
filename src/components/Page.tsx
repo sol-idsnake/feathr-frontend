@@ -1,13 +1,15 @@
 import { Center, Loader, Notification } from "@mantine/core";
+import type { JSX } from "react";
 import { useParams } from "react-router-dom";
 
 import useListData from "../hooks/useListData";
-import { Endpoint } from "../lib/api";
+import { Endpoints } from "../lib/api";
+import type { ApiRoute } from "../types/api";
 import List from "./List";
 
-function Page() {
+function Page(): JSX.Element {
   const { queryKey } = useParams();
-  const initQueryKey = queryKey ?? Endpoint.people;
+  const initQueryKey = (queryKey as ApiRoute) ?? Endpoints.people;
   const { isError, isLoading } = useListData({ queryKey: initQueryKey });
 
   if (isLoading) {
@@ -24,4 +26,5 @@ function Page() {
 
   return <List queryKey={initQueryKey} />;
 }
+
 export default Page;

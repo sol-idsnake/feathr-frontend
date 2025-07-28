@@ -3,7 +3,7 @@ import { type JSX } from "react";
 import { useParams } from "react-router-dom";
 
 import useDetailData from "../hooks/useDetailData";
-import { EntityDetail } from "./EntityDetail";
+import EntityDetail from "./EntityDetail";
 
 function PageDetail(): JSX.Element {
   const { data, isError, isLoading } = useDetailData();

@@ -1,10 +1,7 @@
 import { Burger, Group, Title } from "@mantine/core";
 import type { JSX } from "react";
 
-interface IHeaderProps {
-  opened: boolean;
-  toggle: () => void;
-}
+import type { IHeaderProps } from "../types";
 
 function Header({ opened, toggle }: IHeaderProps): JSX.Element {
   return (

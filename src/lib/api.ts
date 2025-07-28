@@ -3,35 +3,44 @@ import axios from "axios";
 import type { IFetchParams } from "../types/api";
 
 // Base client
-export const api = axios.create({
+const api = axios.create({
   baseURL: "/api/",
 });
 
-export const Endpoint = {
-  people: "people",
-  homeworld: "planets",
-  starships: "starships",
-  species: "species",
+const Endpoints = {
   films: "films",
+  homeworld: "planets",
+  people: "people",
+  species: "species",
+  starships: "starships",
+} as const;
+
+const getDataTypeRoute = (dataType: keyof typeof Endpoints): string => {
+  return Endpoints[dataType];
 };
 
-export async function fetchListData<T>({ url }: IFetchParams): Promise<T[]> {
+async function fetchListData<T>({ url }: IFetchParams): Promise<T[]> {
   try {
     const response = await api.get<T[]>(`${url}`);
     return response.data;
-  } catch (error) {
-    console.error(`API error on ${url}:`, error);
+  } catch {
     throw new Error(`Failed to fetch data from ${url}`);
   }
 }
 
-export async function fetchSingleData<T>({
+async function fetchSingleData<T>({
   url,
   id,
 }: {
   url: string;
   id?: string;
 }): Promise<T> {
-  const response = await api.get<T>(`${url}/${id}`);
-  return response.data;
+  try {
+    const response = await api.get<T>(`${url}/${id}`);
+    return response.data;
+  } catch {
+    throw new Error(`Failed to fetch data from ${url}`);
+  }
 }
+
+export { api, Endpoints, fetchListData, fetchSingleData, getDataTypeRoute };

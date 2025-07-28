@@ -1,12 +1,12 @@
 import type {
-  GetItemCardReturnProps,
+  IGetItemCardReturnProps,
   IListItemProps,
+  IRelatedQueryProps,
   Person,
   Planet,
-  RelatedQuery,
   Starship,
 } from "../types";
-import { Endpoint } from "./api";
+import { Endpoints, getDataTypeRoute } from "./api";
 
 export function formatPopulation(population: string): string {
   if (population.includes("unknown")) {
@@ -50,7 +50,7 @@ export function getIdfromUrl(url: string): string {
 export function getItemCard({
   item,
   dataType,
-}: IListItemProps): GetItemCardReturnProps {
+}: IListItemProps): IGetItemCardReturnProps {
   const entityId = getIdfromUrl(item.url);
 
   switch (dataType) {
@@ -113,18 +113,18 @@ export function buildRelatedQueries({
 }: {
   isSuccess: boolean;
   person?: Person;
-}): RelatedQuery[] {
+}): IRelatedQueryProps[] {
   if (!isSuccess || !person) {
     return [];
   }
 
-  const queries: RelatedQuery[] = [];
+  const queries: IRelatedQueryProps[] = [];
 
   // Add homeworld query
   if (person.homeworld) {
     queries.push({
-      key: "homeworld",
-      url: Endpoint.homeworld,
+      key: Endpoints.homeworld,
+      url: getDataTypeRoute("homeworld"),
       id: getIdfromUrl(person.homeworld),
     });
   }
@@ -132,8 +132,8 @@ export function buildRelatedQueries({
   // Add species queries
   person.species.forEach((url) => {
     queries.push({
-      key: "species",
-      url: Endpoint.species,
+      key: Endpoints.species,
+      url: getDataTypeRoute("species"),
       id: getIdfromUrl(url),
     });
   });
@@ -141,8 +141,8 @@ export function buildRelatedQueries({
   // Add films queries
   person.films.forEach((url) => {
     queries.push({
-      key: "films",
-      url: Endpoint.films,
+      key: Endpoints.films,
+      url: getDataTypeRoute("films"),
       id: getIdfromUrl(url),
     });
   });
@@ -150,8 +150,8 @@ export function buildRelatedQueries({
   // Add starships queries
   person.starships.forEach((url) => {
     queries.push({
-      key: "starships",
-      url: Endpoint.starships,
+      key: Endpoints.starships,
+      url: getDataTypeRoute("starships"),
       id: getIdfromUrl(url),
     });
   });

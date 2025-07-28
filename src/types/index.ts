@@ -82,19 +82,29 @@ interface IListItemProps {
   dataType: string;
 }
 
-interface GetItemCardReturnProps {
+interface IGetItemCardReturnProps {
   fields: { label: string; value: string }[];
   header: string;
   id: string;
 }
 
-interface RelatedQuery {
+interface IRelatedQueryProps {
   key: string;
   url: string;
   id: string;
 }
 
+interface IHeaderProps {
+  opened: boolean;
+  toggle: () => void;
+}
+
 type Entity = Planet | Starship | Person | Film | Specie;
 
 export type { BaseEntity, Entity, Film, Person, Planet, Specie, Starship };
-export type { GetItemCardReturnProps, IListItemProps, RelatedQuery };
+export type {
+  IGetItemCardReturnProps,
+  IHeaderProps,
+  IListItemProps,
+  IRelatedQueryProps,
+};

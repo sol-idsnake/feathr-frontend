@@ -1,9 +1,9 @@
-import { Endpoint } from "./lib/api";
+import { Endpoints } from "./lib/api";
 
 const navItems = [
-  { label: "people", to: Endpoint.people },
-  { label: "planets", to: Endpoint.homeworld },
-  { label: "starships", to: Endpoint.starships },
+  { label: "People", to: Endpoints.people },
+  { label: "Planets", to: Endpoints.homeworld },
+  { label: "Starships", to: Endpoints.starships },
 ] as const;
 
 export { navItems };

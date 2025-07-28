@@ -2,9 +2,10 @@ import { SimpleGrid, Stack, Title } from "@mantine/core";
 import { type JSX, useMemo } from "react";
 
 import useListData from "../hooks/useListData";
+import type { ApiRoute } from "../types/api";
 import ListItem from "./ListItem";
 
-function List({ queryKey }: { queryKey: string }): JSX.Element {
+function List({ queryKey }: { queryKey: ApiRoute }): JSX.Element {
   const { data, dataType = queryKey } = useListData({ queryKey });
 
   const listItems = useMemo(() => {

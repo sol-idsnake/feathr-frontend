@@ -1,9 +1,9 @@
-import type { Endpoint } from "../lib/api";
+import type { Endpoints } from "../lib/api";
 
-// Type is the *values* of Endpoint, e.g., "people" | "planets" | "starships"
-export type EndpointUrl = (typeof Endpoint)[keyof typeof Endpoint];
+// Type for API routes (the values), e.g., "people" | "planets" | "starships"
+export type ApiRoute = (typeof Endpoints)[keyof typeof Endpoints];
 
 export interface IFetchParams {
-  url: EndpointUrl;
+  url: ApiRoute;
   id?: string;
 }
