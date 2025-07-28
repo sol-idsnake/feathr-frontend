@@ -7,7 +7,7 @@ interface BaseEntity {
   url: string;
 }
 
-interface Character extends BaseEntity {
+interface Person extends BaseEntity {
   birth_year: string;
   eye_color: string;
   gender: "male" | "female" | "n/a" | "none" | "hermaphrodite" | string;
@@ -49,4 +49,52 @@ interface Starship extends BaseEntity {
   starship_class: string;
 }
 
-export type { BaseEntity, Character, Planet, Starship };
+interface Film extends Omit<BaseEntity, "name" | "films"> {
+  characters: string[];
+  director: string;
+  episode_id: number;
+  opening_crawl: string;
+  planets: string[];
+  producer: string;
+  release_date: string;
+  species: string[];
+  starships: string[];
+  title: string;
+  vehicles: string[];
+}
+
+interface Specie extends BaseEntity {
+  classification: string;
+  designation: string;
+  average_height: string;
+  skin_colors: string;
+  hair_colors: string;
+  eye_colors: string;
+  average_lifespan: string;
+  homeworld: string;
+  language: string;
+  people: string[];
+  films: string[];
+}
+
+interface IListItemProps {
+  item: Entity;
+  dataType: string;
+}
+
+interface GetItemCardReturnProps {
+  fields: { label: string; value: string }[];
+  header: string;
+  id: string;
+}
+
+interface RelatedQuery {
+  key: string;
+  url: string;
+  id: string;
+}
+
+type Entity = Planet | Starship | Person | Film | Specie;
+
+export type { BaseEntity, Entity, Film, Person, Planet, Specie, Starship };
+export type { GetItemCardReturnProps, IListItemProps, RelatedQuery };

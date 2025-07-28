@@ -1,14 +1,9 @@
-const AppRoutes = {
-  Characters: "/characters",
-  Planets: "/planets",
-  Starships: "/starships",
-} as const;
+import { Endpoint } from "./lib/api";
 
-type AppRouteKey = keyof typeof AppRoutes;
+const navItems = [
+  { label: "people", to: Endpoint.people },
+  { label: "planets", to: Endpoint.homeworld },
+  { label: "starships", to: Endpoint.starships },
+] as const;
 
-const navItems = Object.entries(AppRoutes).map(([key, to]) => ({
-  label: key as AppRouteKey,
-  to,
-}));
-
-export { AppRoutes, navItems };
+export { navItems };

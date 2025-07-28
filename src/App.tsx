@@ -1,24 +1,19 @@
-import type { JSX } from "react";
+import { type JSX } from "react";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 
 import BasicAppShell from "./components/AppShell";
-import Characters from "./pages/characters";
-import Planets from "./pages/planets";
-import Starships from "./pages/starships";
-import { AppRoutes } from "./routes";
+import Page from "./components/Page";
+import PageDetail from "./components/PageDetail";
+import { Endpoint } from "./lib/api";
 
 function App(): JSX.Element {
   return (
     <BrowserRouter>
       <BasicAppShell>
         <Routes>
-          <Route
-            element={<Navigate to={AppRoutes.Characters} replace />}
-            path="/"
-          />
-          <Route path={AppRoutes.Characters} element={<Characters />} />
-          <Route path={AppRoutes.Planets} element={<Planets />} />
-          <Route path={AppRoutes.Starships} element={<Starships />} />
+          <Route element={<Navigate to={Endpoint.people} replace />} path="/" />
+          <Route path={`/:queryKey`} element={<Page />} />
+          <Route path={`/:queryKey/:id`} element={<PageDetail />} />
         </Routes>
       </BasicAppShell>
     </BrowserRouter>

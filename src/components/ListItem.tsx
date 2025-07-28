@@ -1,18 +1,26 @@
 import { Card, Text } from "@mantine/core";
 import type { JSX } from "react";
+import { NavLink } from "react-router-dom";
 
-interface IListItemProps {
-  header: string;
-  fields: { label: string; value: string }[];
-}
+import { getItemCard } from "../lib/helper";
+import type { IListItemProps } from "../types";
 
-function ListItem({ header, fields }: IListItemProps): JSX.Element {
+function ListItem({ item, dataType }: IListItemProps): JSX.Element {
+  const { id, header, fields } = getItemCard({ item, dataType });
+
   return (
-    <Card shadow="sm" padding="md" radius="md" withBorder>
+    <Card
+      component={NavLink}
+      to={id}
+      padding="md"
+      radius="md"
+      shadow="sm"
+      withBorder
+    >
       <Text fw={500}>{header}</Text>
 
       {fields.map((row, i) => (
-        <Text key={i} size="sm">
+        <Text key={`field-${i}`} size="sm">
           {row.label}: {row.value}
         </Text>
       ))}

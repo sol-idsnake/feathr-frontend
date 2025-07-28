@@ -11,7 +11,7 @@ export default defineConfig({
     port: 3000,
     proxy: {
       "/api": {
-        target: "https://swapi.dev/api",
+        target: "https://swapi.info/api",
         changeOrigin: true,
         secure: false,
         rewrite: (path) => path.replace(/^\/api/, ""),
