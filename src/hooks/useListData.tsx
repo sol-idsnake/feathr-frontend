@@ -1,24 +1,17 @@
-import { useQuery } from "@tanstack/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
 
 import { fetchListData } from "../lib/api";
+import { queryKeys } from "../lib/queryKeys";
 import type { Entity } from "../types";
 import type { ApiRoute } from "../types/api";
 
-function useListData<T extends Entity>({ queryKey }: { queryKey?: ApiRoute }) {
-  const { data, error, isError, isLoading, isSuccess } = useQuery({
-    enabled: !!queryKey,
-    queryFn: () => fetchListData<T>({ url: queryKey! }),
-    queryKey: [queryKey],
-    staleTime: Infinity,
+function useListData<T extends Entity>({ queryKey }: { queryKey: ApiRoute }) {
+  const { data } = useSuspenseQuery({
+    queryKey: queryKeys.list(queryKey),
+    queryFn: () => fetchListData<T>({ url: queryKey }),
   });
 
-  return {
-    data: isSuccess ? data : [],
-    dataType: queryKey,
-    error,
-    isError,
-    isLoading: isLoading || !isSuccess,
-  };
+  return { data, dataType: queryKey };
 }
 
 export default useListData;

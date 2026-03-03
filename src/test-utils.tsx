@@ -1,10 +1,11 @@
 import { MantineProvider } from "@mantine/core";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, type RenderOptions } from "@testing-library/react";
+import { Suspense } from "react";
 import { BrowserRouter } from "react-router-dom";
 
 // Wrapper with providers
-export const createWrapper = () => {
+export const createTestWrapper = () => {
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: {
@@ -18,7 +19,10 @@ export const createWrapper = () => {
     <BrowserRouter>
       <MantineProvider>
         <QueryClientProvider client={queryClient}>
-          {children}
+          {/* useSuspenseQuery requires Suspense in tests */}
+          <Suspense fallback={null}>
+            {children}
+          </Suspense>
         </QueryClientProvider>
       </MantineProvider>
     </BrowserRouter>
@@ -29,5 +33,5 @@ export const renderWithProviders = (
   element: React.ReactElement,
   options?: Omit<RenderOptions, "wrapper">
 ) => {
-  return render(element, { wrapper: createWrapper(), ...options });
+  return render(element, { wrapper: createTestWrapper(), ...options });
 };
