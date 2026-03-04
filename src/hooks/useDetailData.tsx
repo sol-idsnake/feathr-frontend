@@ -1,79 +1,70 @@
-import { useQueries, useQuery } from "@tanstack/react-query";
+import { useQueries, useSuspenseQuery } from "@tanstack/react-query";
 import { useMemo } from "react";
 import { useParams } from "react-router-dom";
 
-import { Endpoints, fetchSingleData, getDataTypeRoute } from "../lib/api";
+import { Endpoints, fetchSingleData } from "../lib/api";
 import { buildRelatedQueries } from "../lib/helper";
+import { queryKeys } from "../lib/queryKeys";
 import type { Film, Person, Planet, Specie, Starship } from "../types";
+import type { ApiRoute } from "../types/api";
 
 function useDetailData() {
   const { queryKey, id } = useParams();
+  const initQueryKey = (queryKey ?? Endpoints.people) as ApiRoute;
 
-  const initQueryKey = queryKey ?? Endpoints.people;
-
-  // Fetch person data
-  const {
-    data: person,
-    isSuccess,
-    isLoading,
-    isError,
-  } = useQuery<Person>({
-    queryKey: [initQueryKey, id],
+  // Suspends until the primary person record is available
+  const { data: person } = useSuspenseQuery<Person>({
     queryFn: () => fetchSingleData<Person>({ url: initQueryKey, id: id ?? "" }),
-    staleTime: Infinity,
+    queryKey: queryKeys.detail(initQueryKey, id ?? ""),
   });
 
-  // Build related person data queries
+  // person is guaranteed defined here — useSuspenseQuery suspends before this runs
   const relatedQueries = useMemo(
-    () => buildRelatedQueries({ isSuccess, person }),
-    [isSuccess, person]
+    () => buildRelatedQueries({ isSuccess: true, person }),
+    [person]
   );
 
-  // Fetch related data
-  const relatedResults = useQueries({
-    queries: relatedQueries.map(({ id, key, url }) => ({
-      queryKey: [key, id],
-      queryFn: () => fetchSingleData({ url, id }),
-      enabled: !!id,
-      staleTime: Infinity,
+  const related = useQueries({
+    queries: relatedQueries.map(({ id: relatedId, url }) => ({
+      enabled: !!relatedId,
+      queryFn: () => fetchSingleData({ url, id: relatedId }),
+      queryKey: queryKeys.detail(url as ApiRoute, relatedId),
     })),
+    combine: (results) => ({
+      isError: results.some((r) => r.isError),
+      isPending: results.some((r) => r.isPending),
+      // groups results by endpoint key for lookup in fullPersonData
+      byKey: relatedQueries.reduce<Record<string, unknown[]>>(
+        (acc, query, i) => {
+          const item = results[i]?.data;
+          if (item) acc[query.key] = [...(acc[query.key] ?? []), item];
+          return acc;
+        },
+        {}
+      ),
+    }),
   });
 
-  // Build full person data
   const fullPersonData = useMemo(() => {
-    if (!person) {
-      return undefined;
-    }
-
-    function getResultsByKey<T>(key: string): T[] {
-      return relatedQueries
-        .map((query, index) => {
-          return query.key === key ? relatedResults[index].data : null;
-        })
-        .filter((item): item is T => item !== null);
-    }
-
+    const { byKey } = related;
     return {
       ...person,
       homeworld:
-        getResultsByKey<Planet>(getDataTypeRoute("homeworld"))[0]?.name ??
+        (byKey[Endpoints.homeworld]?.[0] as Planet | undefined)?.name ??
         person.homeworld,
-      species: getResultsByKey<Specie>(getDataTypeRoute("species")).map(
-        (specie) => specie?.name
-      ),
-      films: getResultsByKey<Film>(getDataTypeRoute("films")).map(
-        (film) => film?.title
-      ),
-      starships: getResultsByKey<Starship>(getDataTypeRoute("starships")).map(
-        (ship) => ship?.name
-      ),
+      species:
+        (byKey[Endpoints.species] as Specie[] | undefined)?.map((s) => s.name) ?? [],
+      films:
+        (byKey[Endpoints.films] as Film[] | undefined)?.map((f) => f.title) ?? [],
+      starships:
+        (byKey[Endpoints.starships] as Starship[] | undefined)?.map((s) => s.name) ?? [],
     };
-  }, [person, relatedQueries, relatedResults]);
+  }, [person, related]);
 
   return {
     data: fullPersonData,
-    isLoading: isLoading || !isSuccess,
-    isError,
+    isPending: related.isPending,
+    isError: related.isError,
   };
 }
 
