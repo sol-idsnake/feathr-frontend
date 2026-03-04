@@ -20,7 +20,7 @@ function useDetailData() {
 
   // person is guaranteed defined here — useSuspenseQuery suspends before this runs
   const relatedQueries = useMemo(
-    () => buildRelatedQueries({ isSuccess: true, person }),
+    () => buildRelatedQueries({ person }),
     [person]
   );
 

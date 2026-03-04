@@ -108,13 +108,11 @@ export function getItemCard({
 }
 
 export function buildRelatedQueries({
-  isSuccess,
   person,
 }: {
-  isSuccess: boolean;
   person?: Person;
 }): IRelatedQueryProps[] {
-  if (!isSuccess || !person) {
+  if (!person) {
     return [];
   }
 
@@ -130,7 +128,7 @@ export function buildRelatedQueries({
   }
 
   // Add species queries
-  person.species.forEach((url) => {
+  person.species?.forEach((url) => {
     queries.push({
       key: Endpoints.species,
       url: getDataTypeRoute("species"),
@@ -139,7 +137,7 @@ export function buildRelatedQueries({
   });
 
   // Add films queries
-  person.films.forEach((url) => {
+  person.films?.forEach((url) => {
     queries.push({
       key: Endpoints.films,
       url: getDataTypeRoute("films"),
@@ -148,7 +146,7 @@ export function buildRelatedQueries({
   });
 
   // Add starships queries
-  person.starships.forEach((url) => {
+  person.starships?.forEach((url) => {
     queries.push({
       key: Endpoints.starships,
       url: getDataTypeRoute("starships"),
