@@ -27,7 +27,7 @@ export function formatCredits(credits: string): string {
     return "Unknown";
   }
 
-  const num = Number(credits.replace(/,/g, ""));
+  const num = Number(credits.replaceAll(",", ""));
 
   if (isNaN(num)) {
     return credits;
@@ -44,7 +44,7 @@ export function getTotalPages(total: number, pageSize = 10): number {
 }
 
 export function getIdfromUrl(url: string): string {
-  return url.split("/").filter(Boolean).pop() ?? "";
+  return url.split("/").filter(Boolean).at(-1) ?? "";
 }
 
 export function getItemCard({

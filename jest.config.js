@@ -11,6 +11,7 @@ export default {
       {
         tsconfig: {
           jsx: "react-jsx",
+          lib: ["ES2022", "DOM", "DOM.Iterable"],
         },
       },
     ],
