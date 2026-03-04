@@ -61,8 +61,6 @@ describe("<List />", () => {
     mockUseListData.mockReturnValue({
       data: [mockPerson, mockPerson2],
       dataType: Endpoints.people,
-      isLoading: false,
-      isError: false,
     });
 
     renderWithProviders(<List queryKey={Endpoints.people} />);
@@ -74,8 +72,6 @@ describe("<List />", () => {
     mockUseListData.mockReturnValue({
       data: [mockPerson],
       dataType: Endpoints.people,
-      isLoading: false,
-      isError: false,
     });
 
     renderWithProviders(<List queryKey={Endpoints.people} />);
@@ -87,34 +83,6 @@ describe("<List />", () => {
     mockUseListData.mockReturnValue({
       data: [],
       dataType: Endpoints.people,
-      isLoading: false,
-      isError: false,
-    });
-
-    renderWithProviders(<List queryKey={Endpoints.people} />);
-
-    expect(screen.getByText("PEOPLE List")).toBeInTheDocument();
-  });
-
-  it("handles loading state", () => {
-    mockUseListData.mockReturnValue({
-      data: [],
-      dataType: Endpoints.people,
-      isLoading: true,
-      isError: false,
-    });
-
-    renderWithProviders(<List queryKey={Endpoints.people} />);
-
-    expect(screen.getByText("PEOPLE List")).toBeInTheDocument();
-  });
-
-  it("handles error state", () => {
-    mockUseListData.mockReturnValue({
-      data: [],
-      dataType: Endpoints.people,
-      isLoading: false,
-      isError: true,
     });
 
     renderWithProviders(<List queryKey={Endpoints.people} />);

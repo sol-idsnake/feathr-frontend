@@ -5,7 +5,6 @@ import {
   Grid,
   Group,
   Paper,
-  Skeleton,
   Stack,
   Text,
   Title,
@@ -29,22 +28,18 @@ function EntityDetail({ person }: { person: Person }) {
     starships,
   } = person;
 
-  if (!person) {
-    return <Skeleton />;
-  }
-
   const filmBadges = films.map((film, index) => {
     return (
       <Badge key={`${film}-${index}`} variant="light" color="indigo">
-        <Text>{film}</Text>
+        {film}
       </Badge>
     );
   });
 
-  const starShipBadges = starships.map((ship, index) => {
+  const starshipBadges = starships.map((ship, index) => {
     return (
       <Badge variant="light" color="teal" key={`${ship}-${index}`}>
-        <Text>{ship}</Text>
+        {ship}
       </Badge>
     );
   });
@@ -112,7 +107,7 @@ function EntityDetail({ person }: { person: Person }) {
           </Text>
 
           <Group wrap="wrap" gap={"xs"}>
-            {filmBadges}
+            {films.length ? filmBadges : <Text c="dimmed">Unknown</Text>}
           </Group>
         </Paper>
 
@@ -122,7 +117,7 @@ function EntityDetail({ person }: { person: Person }) {
           </Text>
 
           <Group wrap="wrap" gap={"xs"}>
-            {starShipBadges}
+            {starships.length ? starshipBadges : <Text c="dimmed">Unknown</Text>}
           </Group>
         </Paper>
       </Stack>

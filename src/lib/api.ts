@@ -1,6 +1,6 @@
 import axios from "axios";
 
-import type { IFetchParams } from "../types/api";
+import type { ApiRoute, IFetchParams } from "../types/api";
 
 // Base client
 const api = axios.create({
@@ -28,7 +28,7 @@ async function fetchSingleData<T>({
   url,
   id,
 }: {
-  url: string;
+  url: ApiRoute;
   id?: string;
 }): Promise<T> {
   try {

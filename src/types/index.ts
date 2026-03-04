@@ -1,3 +1,5 @@
+import type { ApiRoute } from "./api";
+
 // Base interface for all SWAPI entities
 interface BaseEntity {
   created: string;
@@ -79,7 +81,7 @@ interface Specie extends BaseEntity {
 
 interface IListItemProps {
   item: Entity;
-  dataType: string;
+  dataType: ApiRoute;
 }
 
 interface IGetItemCardReturnProps {

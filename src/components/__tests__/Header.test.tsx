@@ -9,44 +9,30 @@ describe("<Header />", () => {
   });
 
   it("renders without crashing", () => {
-    const { container } = renderWithProviders(
-      <Header opened={false} toggle={mockToggle} />
-    );
+    const { container } = renderWithProviders(<Header opened={false} toggle={mockToggle} />);
 
     expect(container).toBeTruthy();
   });
 
   it("displays the title", () => {
-    const { getByText } = renderWithProviders(
-      <Header opened={false} toggle={mockToggle} />
-    );
+    const { getByText } = renderWithProviders(<Header opened={false} toggle={mockToggle} />);
 
     expect(getByText("Star Wars Explorer")).toBeTruthy();
   });
 
   it("displays the logo", () => {
-    const { getByText } = renderWithProviders(
-      <Header opened={false} toggle={mockToggle} />
-    );
+    const { getByText } = renderWithProviders(<Header opened={false} toggle={mockToggle} />);
 
     expect(getByText("Logo")).toBeTruthy();
   });
 
-  it("renders burger menu when opened is false", () => {
-    const { container } = renderWithProviders(
-      <Header opened={false} toggle={mockToggle} />
+  it("reflects the opened state on the burger", () => {
+    const { container, rerender } = renderWithProviders(
+      <Header opened={false} toggle={mockToggle} />,
     );
+    expect(container.querySelector("[data-opened]")).toBeNull();
 
-    const burgerButton = container.querySelector("button");
-    expect(burgerButton).toBeTruthy();
-  });
-
-  it("renders burger menu when opened is true", () => {
-    const { container } = renderWithProviders(
-      <Header opened={true} toggle={mockToggle} />
-    );
-
-    const burgerButton = container.querySelector("button");
-    expect(burgerButton).toBeTruthy();
+    rerender(<Header opened={true} toggle={mockToggle} />);
+    expect(container.querySelector("[data-opened]")).toBeTruthy();
   });
 });
