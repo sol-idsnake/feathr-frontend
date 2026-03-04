@@ -7,10 +7,8 @@ import EntityDetail from "./EntityDetail";
 import ErrorBoundary from "./ErrorBoundary";
 
 function DetailContent(): JSX.Element {
-  const { data, isPending } = useDetailData();
+  const { data } = useDetailData();
   const { id } = useParams();
-
-  if (isPending || !data) return <Center><Loader /></Center>;
 
   return (
     <div className="list-person-detail">

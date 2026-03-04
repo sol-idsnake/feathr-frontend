@@ -88,12 +88,6 @@ interface IGetItemCardReturnProps {
   id: string;
 }
 
-interface IRelatedQueryProps {
-  key: string;
-  url: string;
-  id: string;
-}
-
 interface IHeaderProps {
   opened: boolean;
   toggle: () => void;
@@ -106,5 +100,4 @@ export type {
   IGetItemCardReturnProps,
   IHeaderProps,
   IListItemProps,
-  IRelatedQueryProps,
 };

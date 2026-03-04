@@ -1,12 +1,10 @@
 import type {
   IGetItemCardReturnProps,
   IListItemProps,
-  IRelatedQueryProps,
   Person,
   Planet,
   Starship,
 } from "../types";
-import { Endpoints, getDataTypeRoute } from "./api";
 
 export function formatPopulation(population: string): string {
   if (population.includes("unknown")) {
@@ -107,52 +105,3 @@ export function getItemCard({
   }
 }
 
-export function buildRelatedQueries({
-  person,
-}: {
-  person?: Person;
-}): IRelatedQueryProps[] {
-  if (!person) {
-    return [];
-  }
-
-  const queries: IRelatedQueryProps[] = [];
-
-  // Add homeworld query
-  if (person.homeworld) {
-    queries.push({
-      key: Endpoints.homeworld,
-      url: getDataTypeRoute("homeworld"),
-      id: getIdfromUrl(person.homeworld),
-    });
-  }
-
-  // Add species queries
-  person.species?.forEach((url) => {
-    queries.push({
-      key: Endpoints.species,
-      url: getDataTypeRoute("species"),
-      id: getIdfromUrl(url),
-    });
-  });
-
-  // Add films queries
-  person.films?.forEach((url) => {
-    queries.push({
-      key: Endpoints.films,
-      url: getDataTypeRoute("films"),
-      id: getIdfromUrl(url),
-    });
-  });
-
-  // Add starships queries
-  person.starships?.forEach((url) => {
-    queries.push({
-      key: Endpoints.starships,
-      url: getDataTypeRoute("starships"),
-      id: getIdfromUrl(url),
-    });
-  });
-
-  return queries.filter((query) => query.id);
-}
