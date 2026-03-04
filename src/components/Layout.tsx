@@ -11,7 +11,7 @@ interface IAppShellProps {
   children: ReactNode;
 }
 
-function BasicAppShell({ children }: IAppShellProps): JSX.Element {
+function Layout({ children }: IAppShellProps): JSX.Element {
   const [opened, { toggle, close }] = useDisclosure();
   const location = useLocation();
 
@@ -22,11 +22,11 @@ function BasicAppShell({ children }: IAppShellProps): JSX.Element {
 
   return (
     <AppShell
-      header={{ collapsed: false, height: "8vh" }}
+      header={{ height: "8vh" }}
       navbar={{
         breakpoint: "sm",
         collapsed: { mobile: !opened },
-        width: "20vw",
+        width: 240,
       }}
       padding="md"
     >
@@ -43,4 +43,4 @@ function BasicAppShell({ children }: IAppShellProps): JSX.Element {
   );
 }
 
-export default BasicAppShell;
+export default Layout;
