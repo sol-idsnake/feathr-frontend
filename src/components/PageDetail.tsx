@@ -1,30 +1,33 @@
 import { Center, Loader, Notification } from "@mantine/core";
-import { type JSX } from "react";
+import { type JSX,Suspense } from "react";
 import { useParams } from "react-router-dom";
 
 import useDetailData from "../hooks/useDetailData";
 import EntityDetail from "./EntityDetail";
+import ErrorBoundary from "./ErrorBoundary";
 
-function PageDetail(): JSX.Element {
-  const { data, isError, isLoading } = useDetailData();
+function DetailContent(): JSX.Element {
+  const { data, isPending } = useDetailData();
   const { id } = useParams();
 
-  if (isLoading) {
-    return (
-      <Center>
-        <Loader />
-      </Center>
-    );
-  }
-
-  if (isError) {
-    return <Notification color="red">Detail could not be fetched</Notification>;
-  }
+  if (isPending || !data) return <Center><Loader /></Center>;
 
   return (
     <div className="list-person-detail">
-      {id && data && !isLoading && <EntityDetail person={data} />}
+      {id && <EntityDetail person={data} />}
     </div>
+  );
+}
+
+function PageDetail(): JSX.Element {
+  const { queryKey, id } = useParams();
+
+  return (
+    <ErrorBoundary key={`${queryKey}-${id}`} fallback={<Notification color="red">Detail could not be fetched</Notification>}>
+      <Suspense fallback={<Center><Loader /></Center>}>
+        <DetailContent />
+      </Suspense>
+    </ErrorBoundary>
   );
 }
 
