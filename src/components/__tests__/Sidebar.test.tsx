@@ -17,4 +17,11 @@ describe("<Sidebar />", () => {
     expect(getByText("Starships")).toBeTruthy();
     expect(links.length).toBe(3);
   });
+
+  it("marks only the current route's nav item as active", () => {
+    window.history.pushState({}, "", "/people");
+    const { container } = renderWithProviders(<Sidebar />);
+    const activeItems = container.querySelectorAll("a[data-active]");
+    expect(activeItems.length).toBe(1);
+  });
 });

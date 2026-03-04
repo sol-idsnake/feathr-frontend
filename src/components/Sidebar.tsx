@@ -12,7 +12,7 @@ function Sidebar(): JSX.Element {
     <Stack p="sm">
       {navItems.map(({ label, to }) => (
         <NavLink
-          active={location.pathname.startsWith(to)}
+          active={location.pathname.startsWith(`/${to}`)}
           component={Link}
           key={to}
           label={label}
