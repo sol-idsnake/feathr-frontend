@@ -6,39 +6,18 @@ import type {
   Starship,
 } from "../types";
 
-export function formatPopulation(population: string): string {
-  if (population.includes("unknown")) {
+export function formatNumber(value: string): string {
+  if (value.includes("unknown")) {
     return "Unknown";
   }
 
-  const num = Number(population);
+  const num = Number(value.replaceAll(",", ""));
 
   if (isNaN(num)) {
-    return population;
+    return value;
   }
 
   return num.toLocaleString();
-}
-
-export function formatCredits(credits: string): string {
-  if (credits.includes("unknown")) {
-    return "Unknown";
-  }
-
-  const num = Number(credits.replaceAll(",", ""));
-
-  if (isNaN(num)) {
-    return credits;
-  }
-
-  return num.toLocaleString("en-US", {
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-  });
-}
-
-export function getTotalPages(total: number, pageSize = 10): number {
-  return Math.ceil(total / pageSize);
 }
 
 export function getIdfromUrl(url: string): string {
@@ -57,7 +36,7 @@ export function getItemCard({
       const fields = [
         {
           label: "Population",
-          value: formatPopulation(planet.population),
+          value: formatNumber(planet.population),
         },
       ];
       return {
@@ -72,7 +51,7 @@ export function getItemCard({
       const fields = [
         {
           label: "Cost",
-          value: formatCredits(starship.cost_in_credits),
+          value: formatNumber(starship.cost_in_credits),
         },
       ];
       return {
@@ -104,4 +83,3 @@ export function getItemCard({
       };
   }
 }
-

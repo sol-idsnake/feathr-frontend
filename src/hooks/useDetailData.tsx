@@ -2,8 +2,8 @@ import { queryOptions, useSuspenseQueries, useSuspenseQuery } from "@tanstack/re
 import { useParams } from "react-router-dom";
 
 import { Endpoints, fetchSingleData } from "../lib/api";
-import { getIdfromUrl } from "../lib/helper";
 import { queryKeys } from "../lib/queryKeys";
+import { getIdfromUrl } from "../lib/utils";
 import type { Film, Person, Planet, Specie, Starship } from "../types";
 import type { ApiRoute } from "../types/api";
 

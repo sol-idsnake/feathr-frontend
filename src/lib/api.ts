@@ -15,10 +15,6 @@ const Endpoints = {
   starships: "starships",
 } as const;
 
-const getDataTypeRoute = (dataType: keyof typeof Endpoints): string => {
-  return Endpoints[dataType];
-};
-
 async function fetchListData<T>({ url }: IFetchParams): Promise<T[]> {
   try {
     const response = await api.get<T[]>(`${url}`);
@@ -43,4 +39,4 @@ async function fetchSingleData<T>({
   }
 }
 
-export { api, Endpoints, fetchListData, fetchSingleData, getDataTypeRoute };
+export { Endpoints, fetchListData, fetchSingleData };

@@ -2,7 +2,7 @@ import { Card, Text } from "@mantine/core";
 import type { JSX } from "react";
 import { NavLink } from "react-router-dom";
 
-import { getItemCard } from "../lib/helper";
+import { getItemCard } from "../lib/utils";
 import type { IListItemProps } from "../types";
 
 function ListItem({ item, dataType }: IListItemProps): JSX.Element {
