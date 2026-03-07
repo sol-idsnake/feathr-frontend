@@ -98,8 +98,4 @@ interface IHeaderProps {
 type Entity = Planet | Starship | Person | Film | Specie;
 
 export type { BaseEntity, Entity, Film, Person, Planet, Specie, Starship };
-export type {
-  IGetItemCardReturnProps,
-  IHeaderProps,
-  IListItemProps,
-};
+export type { IGetItemCardReturnProps, IHeaderProps, IListItemProps };

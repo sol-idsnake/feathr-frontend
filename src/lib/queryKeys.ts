@@ -5,4 +5,4 @@ import type { ApiRoute } from "../types/api";
 export const queryKeys = {
   list: (route: ApiRoute) => [route, "list"],
   detail: (route: ApiRoute, id: string) => [route, "detail", id],
-}
+};

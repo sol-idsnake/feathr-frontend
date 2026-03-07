@@ -15,16 +15,9 @@ function App(): JSX.Element {
     <BrowserRouter>
       <Layout>
         <Routes>
-          <Route
-            element={<Navigate to={Endpoints.people} replace />}
-            path="/"
-          />
+          <Route element={<Navigate to={Endpoints.people} replace />} path="/" />
           {apiRoutes.flatMap((route) => [
-            <Route
-              element={<Page queryKey={route} />}
-              key={route}
-              path={route}
-            />,
+            <Route element={<Page queryKey={route} />} key={route} path={route} />,
             <Route
               element={<PageDetail queryKey={route} />}
               key={`${route}/:id`}

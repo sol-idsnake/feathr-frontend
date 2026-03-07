@@ -9,9 +9,7 @@ function Page({ queryKey }: { queryKey: ApiRoute }): JSX.Element {
   return (
     <ErrorBoundary
       key={queryKey}
-      fallback={
-        <Notification color="red">List could not be fetched</Notification>
-      }
+      fallback={<Notification color="red">List could not be fetched</Notification>}
     >
       <Suspense
         fallback={

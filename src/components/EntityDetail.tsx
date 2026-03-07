@@ -1,14 +1,4 @@
-import {
-  Badge,
-  Card,
-  Divider,
-  Grid,
-  Group,
-  Paper,
-  Stack,
-  Text,
-  Title,
-} from "@mantine/core";
+import { Badge, Card, Divider, Grid, Group, Paper, Stack, Text, Title } from "@mantine/core";
 
 import type { Person } from "../types";
 

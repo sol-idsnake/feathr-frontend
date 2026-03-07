@@ -9,14 +9,7 @@ function ListItem({ item, dataType }: IListItemProps): JSX.Element {
   const { id, header, fields } = getItemCard({ item, dataType });
 
   return (
-    <Card
-      component={NavLink}
-      to={id}
-      padding="md"
-      radius="md"
-      shadow="sm"
-      withBorder
-    >
+    <Card component={NavLink} to={id} padding="md" radius="md" shadow="sm" withBorder>
       <Text fw={500}>{header}</Text>
 
       {fields.map((row, i) => (

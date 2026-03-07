@@ -1,10 +1,4 @@
-import type {
-  IGetItemCardReturnProps,
-  IListItemProps,
-  Person,
-  Planet,
-  Starship,
-} from "../types";
+import type { IGetItemCardReturnProps, IListItemProps, Person, Planet, Starship } from "../types";
 
 export function formatNumber(value: string): string {
   if (value.includes("unknown")) {
@@ -24,10 +18,7 @@ export function getIdfromUrl(url: string): string {
   return url.split("/").filter(Boolean).at(-1) ?? "";
 }
 
-export function getItemCard({
-  item,
-  dataType,
-}: IListItemProps): IGetItemCardReturnProps {
+export function getItemCard({ item, dataType }: IListItemProps): IGetItemCardReturnProps {
   const entityId = getIdfromUrl(item.url);
 
   switch (dataType) {

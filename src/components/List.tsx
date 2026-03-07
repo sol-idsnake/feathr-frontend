@@ -10,13 +10,7 @@ function List({ queryKey }: { queryKey: ApiRoute }): JSX.Element {
 
   const listItems = useMemo(() => {
     return data.map((item) => {
-      return (
-        <ListItem
-          dataType={dataType}
-          item={item}
-          key={item.url}
-        />
-      );
+      return <ListItem dataType={dataType} item={item} key={item.url} />;
     });
   }, [data, dataType]);
 

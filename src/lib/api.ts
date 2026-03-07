@@ -24,13 +24,7 @@ async function fetchListData<T>({ url }: IFetchParams): Promise<T[]> {
   }
 }
 
-async function fetchSingleData<T>({
-  url,
-  id,
-}: {
-  url: ApiRoute;
-  id?: string;
-}): Promise<T> {
+async function fetchSingleData<T>({ url, id }: { url: ApiRoute; id?: string }): Promise<T> {
   try {
     const response = await api.get<T>(`${url}/${id}`);
     return response.data;

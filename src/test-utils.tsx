@@ -20,9 +20,7 @@ export const createTestWrapper = () => {
       <MantineProvider>
         <QueryClientProvider client={queryClient}>
           {/* useSuspenseQuery requires Suspense in tests */}
-          <Suspense fallback={null}>
-            {children}
-          </Suspense>
+          <Suspense fallback={null}>{children}</Suspense>
         </QueryClientProvider>
       </MantineProvider>
     </BrowserRouter>
@@ -31,7 +29,7 @@ export const createTestWrapper = () => {
 
 export const renderWithProviders = (
   element: React.ReactElement,
-  options?: Omit<RenderOptions, "wrapper">
+  options?: Omit<RenderOptions, "wrapper">,
 ) => {
   return render(element, { wrapper: createTestWrapper(), ...options });
 };

@@ -16,5 +16,5 @@ createRoot(document.getElementById("root")!).render(
         <App />
       </QueryClientProvider>
     </MantineProvider>
-  </StrictMode>
+  </StrictMode>,
 );
