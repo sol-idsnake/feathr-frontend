@@ -33,11 +33,11 @@ const starshipOptions = (id: string) => queryOptions({
 });
 
 function useDetailData({ queryKey }: { queryKey: ApiRoute }) {
-  const { id } = useParams();
+  const { id } = useParams() as { id: string };
 
   const { data: person } = useSuspenseQuery<Person>({
-    queryFn: () => fetchSingleData<Person>({ url: queryKey, id: id ?? "" }),
-    queryKey: queryKeys.detail(queryKey, id ?? ""),
+    queryFn: () => fetchSingleData<Person>({ url: queryKey, id }),
+    queryKey: queryKeys.detail(queryKey, id),
   });
 
   // Extract numeric detail IDs from the URL

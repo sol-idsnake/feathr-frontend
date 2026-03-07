@@ -9,21 +9,31 @@ import ErrorBoundary from "./ErrorBoundary";
 
 function DetailContent({ queryKey }: { queryKey: ApiRoute }): JSX.Element {
   const { data } = useDetailData({ queryKey });
-  const { id } = useParams();
 
   return (
     <div className="list-person-detail">
-      {id && <EntityDetail person={data} />}
+      <EntityDetail person={data} />
     </div>
   );
 }
 
 function PageDetail({ queryKey }: { queryKey: ApiRoute }): JSX.Element {
-  const { id } = useParams();
+  const { id } = useParams() as { id: string };
 
   return (
-    <ErrorBoundary key={`${queryKey}-${id}`} fallback={<Notification color="red">Detail could not be fetched</Notification>}>
-      <Suspense fallback={<Center><Loader /></Center>}>
+    <ErrorBoundary
+      key={`${queryKey}-${id}`}
+      fallback={
+        <Notification color="red">Detail could not be fetched</Notification>
+      }
+    >
+      <Suspense
+        fallback={
+          <Center>
+            <Loader />
+          </Center>
+        }
+      >
         <DetailContent queryKey={queryKey} />
       </Suspense>
     </ErrorBoundary>
