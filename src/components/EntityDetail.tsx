@@ -1,16 +1,10 @@
 import { Badge, Card, Divider, Grid, Group, Paper, Stack, Text, Title } from "@mantine/core";
 
 import { getEntityBadgeGroups, getEntityDetailFields } from "../lib/utils";
-import type { Person, Planet, Starship } from "../types";
+import type { DetailEntity } from "../types";
 import type { ApiRoute } from "../types/api";
 
-function EntityDetail({
-  entity,
-  dataType,
-}: {
-  entity: Person | Planet | Starship;
-  dataType: ApiRoute;
-}) {
+function EntityDetail({ dataType, entity }: { dataType: ApiRoute; entity: DetailEntity }) {
   const fields = getEntityDetailFields(entity, dataType);
   const badgeGroups = getEntityBadgeGroups(entity, dataType);
 

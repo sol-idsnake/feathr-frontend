@@ -66,7 +66,7 @@ describe("<List />", () => {
 
     renderWithProviders(<List queryKey={Endpoints.people} />);
 
-    expect(screen.getByText("PEOPLE List")).toBeInTheDocument();
+    expect(screen.getByText("People")).toBeInTheDocument();
   });
 
   it("renders list items correctly", () => {
@@ -88,7 +88,7 @@ describe("<List />", () => {
 
     renderWithProviders(<List queryKey={Endpoints.people} />);
 
-    expect(screen.getByText("PEOPLE List")).toBeInTheDocument();
+    expect(screen.getByText("People")).toBeInTheDocument();
   });
 
   it("renders search input", () => {

@@ -96,6 +96,7 @@ interface IHeaderProps {
 }
 
 type Entity = Planet | Starship | Person | Film | Specie;
+type DetailEntity = Person | Planet | Starship;
 
-export type { BaseEntity, Entity, Film, Person, Planet, Specie, Starship };
+export type { BaseEntity, DetailEntity, Entity, Film, Person, Planet, Specie, Starship };
 export type { IGetItemCardReturnProps, IHeaderProps, IListItemProps };

@@ -1,4 +1,11 @@
-import type { IGetItemCardReturnProps, IListItemProps, Person, Planet, Starship } from "../types";
+import type {
+  DetailEntity,
+  IGetItemCardReturnProps,
+  IListItemProps,
+  Person,
+  Planet,
+  Starship,
+} from "../types";
 import type { ApiRoute } from "../types/api";
 
 export function formatNumber(value: string): string {
@@ -20,7 +27,7 @@ export function getIdfromUrl(url: string): string {
 }
 
 export function getEntityDetailFields(
-  entity: Person | Planet | Starship,
+  entity: DetailEntity,
   dataType: ApiRoute,
 ): { label: string; value: string }[] {
   switch (dataType) {
@@ -68,7 +75,7 @@ export function getEntityDetailFields(
 }
 
 export function getEntityBadgeGroups(
-  entity: Person | Planet | Starship,
+  entity: DetailEntity,
   dataType: ApiRoute,
 ): { label: string; color: string; items: string[] }[] {
   switch (dataType) {

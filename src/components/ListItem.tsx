@@ -12,8 +12,8 @@ function ListItem({ item, dataType }: IListItemProps): JSX.Element {
     <Card component={NavLink} to={id} padding="md" radius="md" shadow="sm" withBorder>
       <Text fw={500}>{header}</Text>
 
-      {fields.map((row, i) => (
-        <Text key={`field-${i}`} size="sm">
+      {fields.map((row) => (
+        <Text key={row.label} size="sm">
           {row.label}: {row.value}
         </Text>
       ))}

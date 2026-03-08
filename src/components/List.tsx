@@ -7,7 +7,7 @@ import type { ApiRoute } from "../types/api";
 import ListItem from "./ListItem";
 
 function List({ queryKey }: { queryKey: ApiRoute }): JSX.Element {
-  const { data, dataType = queryKey } = useListData({ queryKey });
+  const { data, dataType } = useListData({ queryKey });
   const [search, setSearch] = useState("");
 
   const filtered = useMemo(
@@ -20,15 +20,13 @@ function List({ queryKey }: { queryKey: ApiRoute }): JSX.Element {
     [data, search],
   );
 
-  const listItems = useMemo(() => {
-    return filtered.map((item) => {
-      return <ListItem dataType={dataType} item={item} key={item.url} />;
-    });
-  }, [filtered, dataType]);
+  const listItems = filtered.map((item) => (
+    <ListItem dataType={dataType} item={item} key={item.url} />
+  ));
 
   return (
     <Stack>
-      <Title order={2}>{`${dataType.toUpperCase()} List`}</Title>
+      <Title order={2}>{dataType.charAt(0).toUpperCase() + dataType.slice(1)}</Title>
 
       <TextInput
         placeholder={`Search ${dataType}...`}
@@ -39,7 +37,7 @@ function List({ queryKey }: { queryKey: ApiRoute }): JSX.Element {
       {filtered.length === 0 ? (
         <Text c="dimmed">No results</Text>
       ) : (
-        <SimpleGrid cols={3} spacing="md" mt={"md"}>
+        <SimpleGrid cols={{ base: 1, sm: 2, md: 3 }} spacing="md" mt="md">
           {listItems}
         </SimpleGrid>
       )}
