@@ -1,11 +1,6 @@
 import axios from "axios";
 
-import type { ApiRoute, IFetchParams } from "../types/api";
-
-// Base client
-const api = axios.create({
-  baseURL: "/api/",
-});
+const api = axios.create();
 
 const Endpoints = {
   films: "films",
@@ -15,22 +10,14 @@ const Endpoints = {
   starships: "starships",
 } as const;
 
-async function fetchListData<T>({ url }: IFetchParams): Promise<T[]> {
+async function fetchData<T>(url: string): Promise<T> {
   try {
-    const response = await api.get<T[]>(`${url}`);
+    const path = url.startsWith("http") ? new URL(url).pathname : `/api/${url}`;
+    const response = await api.get<T>(path);
     return response.data;
   } catch {
     throw new Error(`Failed to fetch data from ${url}`);
   }
 }
 
-async function fetchSingleData<T>({ url, id }: { url: ApiRoute; id?: string }): Promise<T> {
-  try {
-    const response = await api.get<T>(`${url}/${id}`);
-    return response.data;
-  } catch {
-    throw new Error(`Failed to fetch data from ${url}`);
-  }
-}
-
-export { Endpoints, fetchListData, fetchSingleData };
+export { Endpoints, fetchData };

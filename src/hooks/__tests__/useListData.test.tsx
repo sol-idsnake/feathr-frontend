@@ -5,7 +5,7 @@ import type { Person } from "../../types";
 import useListData from "../useListData";
 
 jest.mock("../../lib/api", () => ({
-  fetchListData: jest.fn(),
+  fetchData: jest.fn(),
 }));
 
 const mockPeople: Person[] = [
@@ -30,14 +30,14 @@ const mockPeople: Person[] = [
 ];
 
 describe("useListData", () => {
-  const mockFetchListData = jest.requireMock("../../lib/api").fetchListData;
+  const mockFetchData = jest.requireMock("../../lib/api").fetchData;
 
   beforeEach(() => {
-    mockFetchListData.mockClear();
+    mockFetchData.mockClear();
   });
 
   it("returns data when query succeeds", async () => {
-    mockFetchListData.mockResolvedValue(mockPeople);
+    mockFetchData.mockResolvedValue(mockPeople);
 
     const { result } = renderHook(() => useListData({ queryKey: "people" }), {
       wrapper: createTestWrapper(),
@@ -51,14 +51,14 @@ describe("useListData", () => {
   });
 
   it("calls fetchListData with correct parameters", async () => {
-    mockFetchListData.mockResolvedValue(mockPeople);
+    mockFetchData.mockResolvedValue(mockPeople);
 
     renderHook(() => useListData({ queryKey: "people" }), {
       wrapper: createTestWrapper(),
     });
 
     await waitFor(() => {
-      expect(mockFetchListData).toHaveBeenCalledWith({ url: "people" });
+      expect(mockFetchData).toHaveBeenCalledWith("people");
     });
   });
 });
