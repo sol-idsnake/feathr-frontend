@@ -1,6 +1,7 @@
 import "@testing-library/jest-dom";
 
 import { screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 
 import { Endpoints } from "../../lib/api";
 import { renderWithProviders } from "../../test-utils";
@@ -88,5 +89,60 @@ describe("<List />", () => {
     renderWithProviders(<List queryKey={Endpoints.people} />);
 
     expect(screen.getByText("PEOPLE List")).toBeInTheDocument();
+  });
+
+  it("renders search input", () => {
+    mockUseListData.mockReturnValue({
+      data: [mockPerson, mockPerson2],
+      dataType: Endpoints.people,
+    });
+
+    renderWithProviders(<List queryKey={Endpoints.people} />);
+
+    expect(screen.getByPlaceholderText("Search people...")).toBeInTheDocument();
+  });
+
+  it("filters list by name", async () => {
+    mockUseListData.mockReturnValue({
+      data: [mockPerson, mockPerson2],
+      dataType: Endpoints.people,
+    });
+
+    renderWithProviders(<List queryKey={Endpoints.people} />);
+
+    await userEvent.type(screen.getByPlaceholderText("Search people..."), "Luke");
+
+    expect(screen.getByText("Luke Skywalker")).toBeInTheDocument();
+    expect(screen.queryByText("C-3PO")).not.toBeInTheDocument();
+  });
+
+  it("shows no results message when filter matches nothing", async () => {
+    mockUseListData.mockReturnValue({
+      data: [mockPerson, mockPerson2],
+      dataType: Endpoints.people,
+    });
+
+    renderWithProviders(<List queryKey={Endpoints.people} />);
+
+    await userEvent.type(screen.getByPlaceholderText("Search people..."), "Darth Vader");
+
+    expect(screen.getByText("No results")).toBeInTheDocument();
+  });
+
+  it("restores all items when search is cleared", async () => {
+    mockUseListData.mockReturnValue({
+      data: [mockPerson, mockPerson2],
+      dataType: Endpoints.people,
+    });
+
+    renderWithProviders(<List queryKey={Endpoints.people} />);
+
+    const input = screen.getByPlaceholderText("Search people...");
+    await userEvent.type(input, "Luke");
+    expect(screen.queryByText("C-3PO")).not.toBeInTheDocument();
+
+    await userEvent.clear(input);
+    expect(screen.getByText("Luke Skywalker")).toBeInTheDocument();
+    expect(screen.getByText("C-3PO")).toBeInTheDocument();
   });
 });
