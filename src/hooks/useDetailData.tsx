@@ -36,39 +36,62 @@ const starshipOptions = (id: string) =>
     select: (starship) => starship.name,
   });
 
+const personNameOptions = (id: string) =>
+  queryOptions({
+    queryFn: () => fetchSingleData<Person>({ url: Endpoints.people, id }),
+    queryKey: queryKeys.detail(Endpoints.people, id),
+    select: (person) => person.name,
+  });
+
 function useDetailData({ queryKey }: { queryKey: ApiRoute }) {
   const { id } = useParams() as { id: string };
 
-  const { data: person } = useSuspenseQuery<Person>({
-    queryFn: () => fetchSingleData<Person>({ url: queryKey, id }),
+  const { data: entity } = useSuspenseQuery({
+    queryFn: () => fetchSingleData<Person | Planet | Starship>({ url: queryKey, id }),
     queryKey: queryKeys.detail(queryKey, id),
   });
 
-  // Extract numeric detail IDs from the URL
-  const homeworldIds = person.homeworld ? [getIdfromUrl(person.homeworld)] : [];
-  const speciesIds = person.species?.map(getIdfromUrl) ?? [];
-  const filmIds = person.films?.map(getIdfromUrl) ?? [];
-  const starshipIds = person.starships?.map(getIdfromUrl) ?? [];
+  // Derive related IDs per entity type; pass empty arrays for inapplicable groups
+  const filmIds = (entity as Person).films?.map(getIdfromUrl) ?? [];
 
-  // Fetch each related group in parallel. Suspends until all queries in each group resolve
-  const [homeworldResult] = useSuspenseQueries({
-    queries: homeworldIds.map(homeworldOptions),
-  });
-  const speciesResults = useSuspenseQueries({
-    queries: speciesIds.map(speciesOptions),
-  });
+  const homeworldIds =
+    queryKey === Endpoints.people && (entity as Person).homeworld
+      ? [getIdfromUrl((entity as Person).homeworld)]
+      : [];
+  const speciesIds =
+    queryKey === Endpoints.people ? ((entity as Person).species?.map(getIdfromUrl) ?? []) : [];
+  const starshipIds =
+    queryKey === Endpoints.people ? ((entity as Person).starships?.map(getIdfromUrl) ?? []) : [];
+
+  const residentIds =
+    queryKey === Endpoints.homeworld ? ((entity as Planet).residents?.map(getIdfromUrl) ?? []) : [];
+
+  const pilotIds =
+    queryKey === Endpoints.starships ? ((entity as Starship).pilots?.map(getIdfromUrl) ?? []) : [];
+
+  // Fetch all related entity groups in parallel. Suspends until all queries in each group resolve
   const filmResults = useSuspenseQueries({ queries: filmIds.map(filmOptions) });
-  const starshipResults = useSuspenseQueries({
-    queries: starshipIds.map(starshipOptions),
-  });
+  const [homeworldResult] = useSuspenseQueries({ queries: homeworldIds.map(homeworldOptions) });
+  const speciesResults = useSuspenseQueries({ queries: speciesIds.map(speciesOptions) });
+  const starshipResults = useSuspenseQueries({ queries: starshipIds.map(starshipOptions) });
+  const residentResults = useSuspenseQueries({ queries: residentIds.map(personNameOptions) });
+  const pilotResults = useSuspenseQueries({ queries: pilotIds.map(personNameOptions) });
 
   return {
     data: {
-      ...person,
-      homeworld: homeworldResult?.data ?? person.homeworld,
-      species: speciesResults.map((r) => r.data),
+      ...entity,
       films: filmResults.map((r) => r.data),
-      starships: starshipResults.map((r) => r.data),
+      ...(queryKey === Endpoints.people && {
+        homeworld: homeworldResult?.data ?? (entity as Person).homeworld,
+        species: speciesResults.map((r) => r.data),
+        starships: starshipResults.map((r) => r.data),
+      }),
+      ...(queryKey === Endpoints.homeworld && {
+        residents: residentResults.map((r) => r.data),
+      }),
+      ...(queryKey === Endpoints.starships && {
+        pilots: pilotResults.map((r) => r.data),
+      }),
     },
   };
 }

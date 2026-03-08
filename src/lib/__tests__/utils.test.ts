@@ -1,5 +1,6 @@
 import {
   formatNumber,
+  getEntityBadgeGroups,
   getEntityDetailFields,
   getIdfromUrl,
   getItemCard,
@@ -45,6 +46,25 @@ describe("Helper Functions", () => {
   });
 
   describe("getEntityDetailFields", () => {
+    const mockPerson = {
+      name: "Luke Skywalker",
+      url: "https://swapi.info/api/people/1/",
+      birth_year: "19BBY",
+      eye_color: "blue",
+      gender: "male",
+      hair_color: "blond",
+      height: "172",
+      homeworld: "Tatooine",
+      mass: "77",
+      skin_color: "fair",
+      species: [],
+      starships: [],
+      films: [],
+      vehicles: [],
+      created: "",
+      edited: "",
+    };
+
     const mockPlanet = {
       name: "Tatooine",
       url: "https://swapi.info/api/planets/1/",
@@ -60,7 +80,7 @@ describe("Helper Functions", () => {
       films: [],
       created: "",
       edited: "",
-    } as any;
+    };
 
     const mockStarship = {
       name: "Death Star",
@@ -76,6 +96,15 @@ describe("Helper Functions", () => {
       created: "",
       edited: "",
     } as any;
+
+    it("returns correct fields for people", () => {
+      const fields = getEntityDetailFields(mockPerson, "people");
+      expect(fields).toContainEqual({ label: "Birth Year", value: "19BBY" });
+      expect(fields).toContainEqual({ label: "Gender", value: "male" });
+      expect(fields).toContainEqual({ label: "Height", value: "172 cm" });
+      expect(fields).toContainEqual({ label: "Mass", value: "77 kg" });
+      expect(fields).toContainEqual({ label: "Homeworld", value: "Tatooine" });
+    });
 
     it("returns correct fields for planets", () => {
       const fields = getEntityDetailFields(mockPlanet, "planets");
@@ -94,8 +123,54 @@ describe("Helper Functions", () => {
     });
 
     it("returns empty array for unknown dataType", () => {
-      const fields = getEntityDetailFields(mockPlanet, "films" as any);
+      const fields = getEntityDetailFields(mockPlanet, "films");
       expect(fields).toEqual([]);
+    });
+  });
+
+  describe("getEntityBadgeGroups", () => {
+    it("returns species, films, starships for people", () => {
+      const entity = {
+        species: ["Human"],
+        films: ["A New Hope"],
+        starships: ["X-wing"],
+      } as any;
+      const groups = getEntityBadgeGroups(entity, "people");
+      expect(groups).toContainEqual(
+        expect.objectContaining({ label: "Species", items: ["Human"] }),
+      );
+      expect(groups).toContainEqual(
+        expect.objectContaining({ label: "Films", items: ["A New Hope"] }),
+      );
+      expect(groups).toContainEqual(
+        expect.objectContaining({ label: "Starships", items: ["X-wing"] }),
+      );
+    });
+
+    it("returns residents and films for planets", () => {
+      const entity = { residents: ["Owen Lars"], films: ["A New Hope"] } as any;
+      const groups = getEntityBadgeGroups(entity, "planets");
+      expect(groups).toContainEqual(
+        expect.objectContaining({ label: "Residents", items: ["Owen Lars"] }),
+      );
+      expect(groups).toContainEqual(
+        expect.objectContaining({ label: "Films", items: ["A New Hope"] }),
+      );
+    });
+
+    it("returns pilots and films for starships", () => {
+      const entity = { pilots: ["Darth Vader"], films: ["A New Hope"] } as any;
+      const groups = getEntityBadgeGroups(entity, "starships");
+      expect(groups).toContainEqual(
+        expect.objectContaining({ label: "Pilots", items: ["Darth Vader"] }),
+      );
+      expect(groups).toContainEqual(
+        expect.objectContaining({ label: "Films", items: ["A New Hope"] }),
+      );
+    });
+
+    it("returns empty array for unknown dataType", () => {
+      expect(getEntityBadgeGroups({} as any, "films")).toEqual([]);
     });
   });
 

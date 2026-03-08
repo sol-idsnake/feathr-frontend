@@ -10,11 +10,7 @@ import ErrorBoundary from "./ErrorBoundary";
 function DetailContent({ queryKey }: { queryKey: ApiRoute }): JSX.Element {
   const { data } = useDetailData({ queryKey });
 
-  return (
-    <div className="list-person-detail">
-      <EntityDetail person={data} />
-    </div>
-  );
+  return <EntityDetail entity={data} dataType={queryKey} />;
 }
 
 function PageDetail({ queryKey }: { queryKey: ApiRoute }): JSX.Element {
