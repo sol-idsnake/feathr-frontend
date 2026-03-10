@@ -84,19 +84,27 @@ interface IListItemProps {
   dataType: ApiRoute;
 }
 
-interface IGetItemCardReturnProps {
-  fields: { label: string; value: string }[];
-  header: string;
-  id: string;
-}
-
-interface IHeaderProps {
-  opened: boolean;
-  toggle: () => void;
-}
-
 type Entity = Planet | Starship | Person | Film | Specie;
-type DetailEntity = Person | Planet | Starship;
 
-export type { BaseEntity, DetailEntity, Entity, Film, Person, Planet, Specie, Starship };
-export type { IGetItemCardReturnProps, IHeaderProps, IListItemProps };
+// Maps each routable key to its concrete entity type — bounds useDetailData's generic
+type RouteEntityMap = {
+  people: Person;
+  planets: Planet;
+  starships: Starship;
+};
+type DetailRoute = keyof RouteEntityMap;
+type DetailEntity = RouteEntityMap[DetailRoute];
+
+export type {
+  BaseEntity,
+  DetailEntity,
+  DetailRoute,
+  Entity,
+  Film,
+  Person,
+  Planet,
+  RouteEntityMap,
+  Specie,
+  Starship,
+};
+export type { IListItemProps };

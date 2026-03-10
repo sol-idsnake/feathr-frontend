@@ -1,11 +1,4 @@
-import type {
-  DetailEntity,
-  IGetItemCardReturnProps,
-  IListItemProps,
-  Person,
-  Planet,
-  Starship,
-} from "../types";
+import type { DetailEntity, IListItemProps, Person, Planet, Starship } from "../types";
 import type { ApiRoute } from "../types/api";
 
 export function formatNumber(value: string): string {
@@ -106,7 +99,11 @@ export function getEntityBadgeGroups(
   }
 }
 
-export function getItemCard({ item, dataType }: IListItemProps): IGetItemCardReturnProps {
+export function getItemCard({ item, dataType }: IListItemProps): {
+  fields: { label: string; value: string }[];
+  header: string;
+  id: string;
+} {
   const entityId = getIdfromUrl(item.url);
 
   switch (dataType) {

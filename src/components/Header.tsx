@@ -2,9 +2,7 @@ import { ActionIcon, Burger, Group, Title } from "@mantine/core";
 import { useComputedColorScheme, useMantineColorScheme } from "@mantine/core";
 import type { JSX } from "react";
 
-import type { IHeaderProps } from "../types";
-
-function Header({ opened, toggle }: IHeaderProps): JSX.Element {
+function Header({ opened, toggle }: { opened: boolean; toggle: () => void }): JSX.Element {
   const { toggleColorScheme } = useMantineColorScheme();
   const computed = useComputedColorScheme("light");
 

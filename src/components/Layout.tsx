@@ -7,11 +7,7 @@ import { useLocation } from "react-router-dom";
 import Header from "./Header";
 import Sidebar from "./Sidebar";
 
-interface IAppShellProps {
-  children: ReactNode;
-}
-
-function Layout({ children }: IAppShellProps): JSX.Element {
+function Layout({ children }: { children: ReactNode }): JSX.Element {
   const [opened, { toggle, close }] = useDisclosure();
   const location = useLocation();
 

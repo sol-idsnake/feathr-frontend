@@ -4,8 +4,25 @@ import { useParams } from "react-router-dom";
 import { Endpoints, fetchData } from "../lib/api";
 import { queryClient } from "../lib/queryClient";
 import { queryKeys } from "../lib/queryKeys";
-import type { DetailEntity, Film, Person, Planet, Specie, Starship } from "../types";
-import type { ApiRoute } from "../types/api";
+import type {
+  DetailEntity,
+  DetailRoute,
+  Film,
+  Person,
+  Planet,
+  RouteEntityMap,
+  Specie,
+  Starship,
+} from "../types";
+
+// Single guard: narrows entity to its concrete type for a given route key
+function isEntityType<K extends DetailRoute>(
+  e: DetailEntity,
+  key: DetailRoute,
+  route: K,
+): e is RouteEntityMap[K] {
+  return key === route;
+}
 
 // Each factory fetches a single related entity and selects only the display value
 const homeworldOptions = (url: string) =>
@@ -43,7 +60,7 @@ const personNameOptions = (url: string) =>
     select: (person) => person.name,
   });
 
-function useDetailData({ queryKey }: { queryKey: ApiRoute }) {
+function useDetailData<K extends DetailRoute>({ queryKey }: { queryKey: K }) {
   const { id } = useParams() as { id: string };
 
   const { data: entity } = useSuspenseQuery({
@@ -56,41 +73,41 @@ function useDetailData({ queryKey }: { queryKey: ApiRoute }) {
         ?.find((item) => item.url.endsWith(`/${id}/`) || item.url.endsWith(`/${id}`)),
   });
 
-  // Derive related URL arrays per entity type; pass empty arrays for inapplicable groups
-  const filmUrls = (entity as Person).films ?? [];
-
-  const homeworldUrls =
-    queryKey === Endpoints.people && (entity as Person).homeworld
-      ? [(entity as Person).homeworld]
-      : [];
-  const speciesUrls = queryKey === Endpoints.people ? ((entity as Person).species ?? []) : [];
-  const starshipUrls = queryKey === Endpoints.people ? ((entity as Person).starships ?? []) : [];
-
-  const residentUrls = queryKey === Endpoints.homeworld ? ((entity as Planet).residents ?? []) : [];
-
-  const pilotUrls = queryKey === Endpoints.starships ? ((entity as Starship).pilots ?? []) : [];
+  const person = isEntityType(entity, queryKey, "people") ? entity : null;
+  const planet = isEntityType(entity, queryKey, "planets") ? entity : null;
+  const starship = isEntityType(entity, queryKey, "starships") ? entity : null;
 
   // Fetch all related entity groups in parallel. Suspends until all queries in each group resolve
-  const filmResults = useSuspenseQueries({ queries: filmUrls.map(filmOptions) });
-  const [homeworldResult] = useSuspenseQueries({ queries: homeworldUrls.map(homeworldOptions) });
-  const speciesResults = useSuspenseQueries({ queries: speciesUrls.map(speciesOptions) });
-  const starshipResults = useSuspenseQueries({ queries: starshipUrls.map(starshipOptions) });
-  const residentResults = useSuspenseQueries({ queries: residentUrls.map(personNameOptions) });
-  const pilotResults = useSuspenseQueries({ queries: pilotUrls.map(personNameOptions) });
+  const filmResults = useSuspenseQueries({ queries: entity.films.map(filmOptions) });
+  const [homeworldResult] = useSuspenseQueries({
+    queries: (person?.homeworld ? [person.homeworld] : []).map(homeworldOptions),
+  });
+  const speciesResults = useSuspenseQueries({
+    queries: (person?.species ?? []).map(speciesOptions),
+  });
+  const starshipResults = useSuspenseQueries({
+    queries: (person?.starships ?? []).map(starshipOptions),
+  });
+  const residentResults = useSuspenseQueries({
+    queries: (planet?.residents ?? []).map(personNameOptions),
+  });
+  const pilotResults = useSuspenseQueries({
+    queries: (starship?.pilots ?? []).map(personNameOptions),
+  });
 
   return {
     data: {
       ...entity,
       films: filmResults.map((r) => r.data),
-      ...(queryKey === Endpoints.people && {
-        homeworld: homeworldResult?.data ?? (entity as Person).homeworld,
+      ...(person && {
+        homeworld: homeworldResult?.data ?? person.homeworld,
         species: speciesResults.map((r) => r.data),
         starships: starshipResults.map((r) => r.data),
       }),
-      ...(queryKey === Endpoints.homeworld && {
+      ...(planet && {
         residents: residentResults.map((r) => r.data),
       }),
-      ...(queryKey === Endpoints.starships && {
+      ...(starship && {
         pilots: pilotResults.map((r) => r.data),
       }),
     },
